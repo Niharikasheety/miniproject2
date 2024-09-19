@@ -1,0 +1,154 @@
+//Java Final Project
+import java.util.Random;
+import java.util.Scanner;
+
+public class PasswordGenerator {
+    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=";
+    private static final int MIN_PASSWORD_LENGTH = 8;
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Random random = new Random();
+
+        while (true) {
+            System.out.println("Password Generator");
+            System.out.println("1. Generate Password");
+            System.out.println("2. Check Password Strength");
+            System.out.println("3. Useful Information");
+            System.out.println("4. Exit");
+            System.out.print("Choose an option: ");
+
+            int option = scanner.nextInt();
+
+            switch (option) {
+                case 1:
+                    generatePassword(random);
+                    break;
+                case 2:
+                    checkPasswordStrength(scanner);
+                    break;
+                case 3:
+                    displayUsefulInformation();
+                    break;
+                case 4:
+                    System.out.println("Exiting...");
+                    return;
+                default:
+                    System.out.println("Invalid option. Please try again.");
+            }
+        }
+    }
+
+    private static void generatePassword(Random random) {
+        System.out.print("Enter password length (min 8 characters): ");
+        int length = new Scanner(System.in).nextInt();
+
+        if (length < MIN_PASSWORD_LENGTH) {
+            System.out.println("Password length must be at least 8 characters.");
+            return;
+        }
+
+        StringBuilder password = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            password.append(CHARACTERS.charAt(random.nextInt(CHARACTERS.length())));
+        }
+
+        System.out.println("Generated Password: " + password.toString());
+    }
+
+    private static void checkPasswordStrength(Scanner scanner) {
+        System.out.print("Enter password to check strength: ");
+        String password = scanner.next();
+
+        int strength = calculatePasswordStrength(password);
+
+        System.out.println("Password Strength: " + getStrengthLevel(strength));
+    }
+
+    private static int calculatePasswordStrength(String password) {
+        int strength = 0;
+
+        // Check for length
+        if (password.length() >= MIN_PASSWORD_LENGTH) {
+            strength += 1;
+        }
+
+        // Check for uppercase letters
+        if (hasUppercaseLetters(password)) {
+            strength += 1;
+        }
+
+        // Check for lowercase letters
+        if (hasLowercaseLetters(password)) {
+            strength += 1;
+        }
+
+        // Check for numbers
+        if (hasNumbers(password)) {
+            strength += 1;
+        }
+
+        // Check for special characters
+        if (hasSpecialCharacters(password)) {
+            strength += 1;
+        }
+
+        return strength;
+    }
+
+    private static String getStrengthLevel(int strength) {
+        if (strength == 5) {
+            return "Very Strong";
+        } else if (strength >= 3) {
+            return "Strong";
+        } else if (strength >= 2) {
+            return "Medium";
+        } else {
+            return "Weak";
+        }
+    }
+
+    private static boolean hasUppercaseLetters(String password) {
+        for (char c : password.toCharArray()) {
+            if (Character.isUpperCase(c)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean hasLowercaseLetters(String password) {
+        for (char c : password.toCharArray()) {
+            if (Character.isLowerCase(c)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean hasNumbers(String password) {
+        for (char c : password.toCharArray()) {
+            if (Character.isDigit(c)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean hasSpecialCharacters(String password) {
+        for (char c : password.toCharArray()) {
+            if (!Character.isLetterOrDigit(c)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static void displayUsefulInformation() {
+        System.out.println("Useful Information:");
+        System.out.println("1. Use a mix of uppercase and lowercase letters.");
+        System.out.println("2. Include numbers and special characters.");
+        System.out.println("3. Avoid using easily guessable information.");
+        System.out.println("4. Use a password manager to generate and store unique passwords.");
+    }
+}
